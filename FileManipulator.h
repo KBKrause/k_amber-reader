@@ -1,3 +1,14 @@
+/**
+	k_amber-reader
+    FileManipulator.h
+	FileManipulator (fmanip) is an easy way for non-programmers
+		to navigate and use the unix or windows file system. It also takes
+		care of reading, writing, etc.
+
+    Author(s): Kevin B. Krause
+    Version:   unreleased
+*/
+
 #pragma once
 #include <string>
 #include <fstream>
@@ -10,27 +21,45 @@ using namespace std;
 class FileManipulator
 {
 public:
-	
-	// What is filePath_read_write currently used for?
 
+	/**
+   		Constructor for fmanip objects
+   		Parameters:
+      		string f - Path to the file being used
+   		Returns:
+      		An fmanip object
+		Bugs:
+			none
+	*/
 	FileManipulator(string f);
-
-	/* configure the reading filePath_read, writing filePath_read,
-	and future options. Returns true if all changes succesfully made.*/
-	bool configure(string in_read_path, string in_write_path);
 
 protected:
 
-	ifstream open_file();
-
-	// returns true if the file's state is closed (or NOT is_open())
-	bool close_file();
-
-	ofstream open_for_writing(string path);
+	/**
+   		Helper function to open a file
+   		Parameters:
+      		ifstream& inFile - Handle used by child class
+   		Returns:
+			  true - File found and opened without error
+			  false - File not opened successfully
+		Bugs:
+			none
+	*/
+	bool open_file(ifstream& inFile);
+	/**
+   		Helper function to close a file
+   		Parameters:
+      		ifstream& inFile - Handle used by child class
+   		Returns:
+			true - File closed successfully
+			false - File is still open
+		Bugs:
+			none
+	*/
+	bool close_file(ifstream& inFile);
 
 	//----- DATA MEMBERS -----//
 
-	string filePath_read;
-	string filePath_read_write;
+	string filePath;
 	
 };

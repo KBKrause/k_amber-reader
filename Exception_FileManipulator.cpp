@@ -1,17 +1,18 @@
+/**
+	k_amber-reader
+	Exception_FileManipulator.cpp
+	Implementation of Exception_FileManipulator.h
+		It will eventually be renamed ExceptionFileManipulator (to be more
+		stylistically pleasing).
+
+	Author(s): Kevin B. Krause
+	Version:   unreleased
+*/
+
 #include "Exception_FileManipulator.h"
 #include <iostream>
 
-Exception_FileManipulator::Exception_FileManipulator(string in_debug_info)
+Exception_FileManipulator::Exception_FileManipulator()
 {
-	debug_info = in_debug_info;
-}
-//--
-void Exception_FileManipulator::print_debug_info()
-{
-	cout << debug_info;
-}
-//--
-string Exception_FileManipulator::get_debug_info()
-{
-	return debug_info;
+	
 }

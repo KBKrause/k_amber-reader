@@ -1,9 +1,23 @@
+/**
+	k_amber-reader
+	FileReader.cpp
+	Implementation of FileReader.h.
+
+	Notable Bugs:
+		-Reduce opening of files to a function.
+		-Automatically close files at the end of file reading, writing, etc.
+			functions. Destructor?
+
+	Author(s): Kevin B. Krause
+	Version:   unreleased
+*/
+
 #include "FileReader.h"
 #include <string>
 #include <unordered_map>
 
-FileReader::FileReader(string filePath_read)
-	:FileManipulator(filePath_read)
+FileReader::FileReader(string filePath)
+	: FileManipulator(filePath)
 {
 	
 }
@@ -11,7 +25,9 @@ FileReader::FileReader(string filePath_read)
 void FileReader::count_string()
 {
 	string in_string = " ";
-	vector <string> vec;
+	vector <string> searchWords;
+	// The freq_vec is a "mirrored" vector that matches the string at index n of searchWords
+	// at index n. This is not a good use of memory and can be improved.
 	vector <int> freq_vec;
 
 	cout << "Enter all the strings to search for, separated with spaces." << endl;
@@ -26,11 +42,18 @@ void FileReader::count_string()
 			break;
 		}
 
-		vec.push_back(in_string);
+		searchWords.push_back(in_string);
 		freq_vec.push_back(0);
 	}
 
-	ifstream inFile = open_file();
+	ifstream inFile(this->filePath);
+
+	if (this->open_file(inFile) == false)
+	{
+		Exception_FileManipulator ex;
+		throw ex;
+	}
+
 	string phr;
 
 	cout << "Searching for occurences ..." << endl;
@@ -39,9 +62,11 @@ void FileReader::count_string()
 	{
 		inFile >> phr;
 
-		for (unsigned int i = 0; i < vec.size(); i++)
+		// TODO:
+		// There is likely a better way than to perform a linear search.
+		for (size_t i = 0; i < searchWords.size(); i++)
 		{
-			if (vec[i] == phr)
+			if (searchWords[i] == phr)
 			{
 				freq_vec[i]++;
 			}
@@ -50,24 +75,34 @@ void FileReader::count_string()
 
 	cout << "Occurences found: " << endl;
 	
-	for (unsigned int i = 0; i < vec.size(); i++)
+	for (size_t i = 0; i < searchWords.size(); i++)
 	{
-		cout << vec[i] << " found " << freq_vec[i] << " times" << endl;
+		cout << searchWords[i] << " found " << freq_vec[i] << " times" << endl;
 	}
 
-	if (close_file() == true)
+	// TODO
+	// Create a way to automatically close files at the end of each function.
+	// Throw exceptions.
+	if (close_file(inFile) == true)
 	{
 		cout << "File closed successfully" << endl;
 	}
 	else
 	{
-		cout << "File unable to be closed" << endl;
+		Exception_FileManipulator ex;
+		throw ex;
 	}
 }
 //--
-void FileReader::hydrogen_bond_intra_average(string output_file, double threshold_persistence)
+void FileReader::hydrogen_bond_intra_average(double threshold_persistence)
 {
-	ifstream inFile = open_file();
+	ifstream inFile(this->filePath);
+
+	if (this->open_file(inFile) == false)
+	{
+		Exception_FileManipulator ex;
+		throw ex;
+	}
 
 	vector <string> ACCEPTORS;
 	unordered_map < string, vector < hbond_child > > DONORS;
@@ -76,8 +111,8 @@ void FileReader::hydrogen_bond_intra_average(string output_file, double threshol
 	double in_frac;
 
 	cout << "*-*-*-*-*-*-*-*-*-*-* HBOND-INTRA-AVG.DAT *-*-*-*-*-*-*-*-*-*-*" << endl;
-	cout << "INPUT = " << filePath_read << endl;
-	cout << "OUTPUT .dat = " << output_file << endl;
+	cout << "INPUT = " << this->filePath << endl;
+	//cout << "OUTPUT .dat = " << output_file << endl;
 	cout << "HYDROGEN BONDS ACCEPTED AT THRESHOLD MINIMUM = " << threshold_persistence << endl;
 
 	// first 6 words aren't needed
@@ -197,7 +232,7 @@ void FileReader::hydrogen_bond_intra_average(string output_file, double threshol
 	// had to hard code in the second for loop and onwards
 	// not sure how to account for an N, then an N1, and so on
 	// or if a certain acceptor has already encountered a certain donor
-	for (unsigned int i = 0; i < ACCEPTORS.size(); i++)
+	for (size_t i = 0; i < ACCEPTORS.size(); i++)
 	{
 		cout << "BONDS AT ACCEPTOR: " << ACCEPTORS[i] << endl;
 		cout << "ACCEPTOR CHAIN";
@@ -209,7 +244,7 @@ void FileReader::hydrogen_bond_intra_average(string output_file, double threshol
 		cout << endl;
 		
 		cout << "DONOR: N" << endl;
-		for (unsigned int j = 0; j < DONORS[ACCEPTORS[i] + "_" + "N"].size(); j++)
+		for (size_t j = 0; j < DONORS[ACCEPTORS[i] + "_" + "N"].size(); j++)
 		{
 			cout << DONORS[ACCEPTORS[i] + "_" + "N"][j].acceptor_chain;
 			cout << "			";
@@ -221,7 +256,7 @@ void FileReader::hydrogen_bond_intra_average(string output_file, double threshol
 		}
 
 		cout << "DONOR: N1" << endl;
-		for (unsigned int j = 0; j < DONORS[ACCEPTORS[i] + "_" + "N1"].size(); j++)
+		for (size_t j = 0; j < DONORS[ACCEPTORS[i] + "_" + "N1"].size(); j++)
 		{
 			cout << DONORS[ACCEPTORS[i] + "_" + "N1"][j].acceptor_chain;
 			cout << "			";
@@ -246,7 +281,7 @@ void FileReader::hydrogen_bond_intra_average(string output_file, double threshol
 		{
 			cout << iter->first << endl;
 
-			for (unsigned int i = 0; i < iter->second.size(); i++)
+			for (size_t i = 0; i < iter->second.size(); i++)
 			{
 				cout << iter->second[i].acceptor_chain << ", " << iter->second[i].donor_chain << ", " << iter->second[i].persistence << endl;
 			}
@@ -256,14 +291,22 @@ void FileReader::hydrogen_bond_intra_average(string output_file, double threshol
 	}
 }
 //--
-void FileReader::distance_atoms(string output_file, double threshold_distance)
+void FileReader::distance_atoms(double threshold_distance)
 {
 	cout << "*-*-*-*-*-*-*-*-*-*-* DISTANCE.IN *-*-*-*-*-*-*-*-*-*-*" << endl;
-	cout << "INPUT = " << filePath_read << endl;
-	cout << "OUTPUT .dat = " << output_file << endl;
+	cout << "INPUT = " << this->filePath << endl;
+	//cout << "OUTPUT .dat = " << output_file << endl;
 	cout << "MAXIMUM ANGSTROM DISTANCE = " << threshold_distance << endl;
 
-	ifstream inFile = open_file();
+	ifstream inFile(this->filePath);
+
+	if (this->open_file(inFile) == false)
+	{
+		Exception_FileManipulator ex;
+		throw ex;
+	}
+
+	// Is this string really necessary?
 	string garbage;
 
 	struct frame_pair
@@ -325,23 +368,20 @@ void FileReader::distance_atoms(string output_file, double threshold_distance)
 	}
 	*/
 
-	if (close_file())
+	if (this->close_file(inFile))
 	{
 		cout << "Done" << endl;
 	}
-}
-//--
-void FileReader::filter_pdb_by_hbond(string output_file, string in_acceptor, string in_donor)
-{
-	cout << "*-*-*-*-*-*-*-*-*-*-* HBOND-INTRA-AVG.IN *-*-*-*-*-*-*-*-*-*-*" << endl;
-	cout << "INPUT = " << filePath_read << endl;
-	cout << "OUTPUT .dat = " << output_file << endl;
-	cout << "FILTER ALL BUT ACCEPTOR/DONOR = " << in_acceptor << " / " << in_donor << endl;
+	else
+	{
+		Exception_FileManipulator ex;
+		throw ex;
+	}
 }
 //--
 bool FileReader::found_acceptor(vector < string > in_ACCEPTORS, string search_atom)
 {
-	for (unsigned int i = 0; i < in_ACCEPTORS.size(); i++)
+	for (size_t i = 0; i < in_ACCEPTORS.size(); i++)
 	{
 		if (in_ACCEPTORS[i] == search_atom)
 		{

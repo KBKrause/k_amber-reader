@@ -1,6 +1,16 @@
+/**
+	k_amber-reader
+    Source.cpp
+	Driver file. This is launched in the console window. See below for
+		specific instructions.
+
+    Author(s): Kevin B. Krause
+    Version:   unreleased
+*/
+
 #include <iostream>
 #include <string>
-#include <assert.h>
+//#include <assert.h>
 
 // FILE MANIPULATOR(S)
 #include "FileManipulator.h"
@@ -9,20 +19,15 @@
 
 using namespace std;
 
-struct hbond_child
+int main(int argc, char* argv[])
 {
-	string acceptor_chain;
-	string donor_chain;
-	double persistence;
-};
-
-int main()
-{
-	system("pause");
+	cout << "Init ..." << endl << endl;
+	FileReader f("./data/SULL_ALP-R4_Hbond.dat");
+	f.hydrogen_bond_intra_average(0.05);
 
 	// add output file to this method and it's done
-	FileReader test_hbond("C:/Users/Kevin/Desktop/H-bond-Intra-avg.dat");
-	test_hbond.hydrogen_bond_intra_average("nil", 0.05);
+	//FileReader test_hbond("C:/Users/Kevin/Desktop/H-bond-Intra-avg.dat");
+	//test_hbond.hydrogen_bond_intra_average("nil", 0.05);
 
 	// Test the exception thing in this.
 	// Make connection to the open_for_write() function in fileManipulator.
@@ -40,3 +45,13 @@ int main()
 
 	return 0;
 }
+
+/* TODO
+FIXES:
+
+SUGGESTIONS:
+	-MAke FileManipulator an abstract class. Fmanip is useless on its own. Doesn't need to be
+	instantiated every time.
+	-Give it static methods.
+
+*/
