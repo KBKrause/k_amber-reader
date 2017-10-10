@@ -10,48 +10,24 @@
 
 #include <iostream>
 #include <string>
-//#include <assert.h>
 
-// FILE MANIPULATOR(S)
 #include "FileManipulator.h"
-//--
 #include "FileReader.h"
+#include "FileWriter.h"
 
 using namespace std;
 
 int main(int argc, char* argv[])
 {
-	cout << "Init ..." << endl << endl;
-	FileReader f("./data/SULL_ALP-R4_Hbond.dat");
-	f.hydrogen_bond_intra_average(0.05);
-
-	// add output file to this method and it's done
-	//FileReader test_hbond("C:/Users/Kevin/Desktop/H-bond-Intra-avg.dat");
-	//test_hbond.hydrogen_bond_intra_average("nil", 0.05);
-
-	// Test the exception thing in this.
-	// Make connection to the open_for_write() function in fileManipulator.
-
-	/*
 	try
-	{
-	g.thrower();
+	{	
+		FileReader f("C:/Users/Kevin/Documents/Github/k_amber-reader/data/SULL_surface_ALP-R4_ligand.dat");
+		f.surface_average();
 	}
-	catch(Exception_FileManipulator e)
+	catch (Exception_FileManipulator ex)
 	{
-	cout << "Caught exception" << endl;
+		
 	}
-	*/
 
 	return 0;
 }
-
-/* TODO
-FIXES:
-
-SUGGESTIONS:
-	-MAke FileManipulator an abstract class. Fmanip is useless on its own. Doesn't need to be
-	instantiated every time.
-	-Give it static methods.
-
-*/

@@ -15,12 +15,17 @@ FileManipulator::FileManipulator(string f)
 {
 	filePath = f;
 }
-//--
-bool FileManipulator::open_file(ifstream& inFile)
+FileManipulator::FileManipulator()
 {
-	inFile.open(filePath.c_str());
+	PRN_WARNING();
+	filePath = "";
+}
+//--
+bool FileManipulator::open_file()
+{
+	ioFile.open(filePath);
 
-	if (inFile.good())
+	if (ioFile.good())
 	{
 		return true;
 	}
@@ -30,11 +35,13 @@ bool FileManipulator::open_file(ifstream& inFile)
 	}
 }
 //--
-bool FileManipulator::close_file(ifstream& inFile)
+bool FileManipulator::close_file()
 {
-	inFile.close();
+	// Should there be protection here, so that close cannot be called if
+		// it has never opened something?
+	ioFile.close();
 
-	if (inFile.is_open() == false)
+	if (ioFile.is_open() == false)
 	{
 		return true;
 	}
@@ -43,4 +50,30 @@ bool FileManipulator::close_file(ifstream& inFile)
 		return false;
 	}
 }
-//--
+
+bool FileManipulator::set_file_path_read(string newPath)
+{
+	ifstream exists(newPath);
+
+	if (!exists)
+	{
+		return false;
+	}
+	else
+	{
+		if (close_file())
+		{
+			filePath = newPath;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+}
+
+string FileManipulator::getFilePath()
+{
+	return filePath;
+}

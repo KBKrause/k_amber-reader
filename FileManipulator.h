@@ -23,43 +23,91 @@ class FileManipulator
 public:
 
 	/**
-   		Constructor for fmanip objects
-   		Parameters:
-      		string f - Path to the file being used
-   		Returns:
-      		An fmanip object
-		Bugs:
-			none
+		Getter methods for private data:
+		string filePath
 	*/
-	FileManipulator(string f);
+	string getFilePath();
 
 protected:
 
 	/**
+		Constructor for fmanip objects. It needs to be protected so that it can
+			only be called by inheriting classes.
+		Parameters:
+			string f - Path to the file being used
+		Returns:
+			An fmanip object
+		Bugs:
+			none
+	*/
+	FileManipulator(string f);
+	/**
+		Constructor for fmanip objects. The default constructor will have its
+			path set in the future (hopefully) and reset as needed.
+		Parameters:
+			none
+		Returns:
+			An fmanip object
+		Bugs:
+			Safety
+	*/
+	FileManipulator();
+	/**
    		Helper function to open a file
    		Parameters:
-      		ifstream& inFile - Handle used by child class
+			none
    		Returns:
 			  true - File found and opened without error
 			  false - File not opened successfully
 		Bugs:
 			none
 	*/
-	bool open_file(ifstream& inFile);
+	bool open_file();
 	/**
    		Helper function to close a file
    		Parameters:
-      		ifstream& inFile - Handle used by child class
+			none
    		Returns:
 			true - File closed successfully
 			false - File is still open
 		Bugs:
 			none
 	*/
-	bool close_file(ifstream& inFile);
+	bool close_file();
+	/**
+		Configure this fmanip to use a new file for reading. The old one will be discarded.
+		Parameters:
+			string newPath - Path to the new file being read
+		Returns:
+			true - Old file closed and newPath set
+			false - Either: newPath does not exist, OR old file is still open/cannot be closed
+		Bugs:
+			none
+		Other:
+			Can we report how it failed (stderr) and why it returns false?
+	*/
+	bool set_file_path_read(string newPath);
+	/**
+		Configure this fmanip to use a new file for writing. The old one (associated file)
+			will be discarded.
+		Parameters:
+			string newPath - Path to the new file being read
+		Returns:
+			true - Old file closed and newPath set
+			false - Either: newPath does not exist, OR old file is still open/cannot be closed
+		Bugs:
+			none
+		Other:
+			Can we report how it failed (stderr) and why it returns false?
+	*/
+	bool set_file_path_write(string newPath);
 
-	//----- DATA MEMBERS -----//
+	// The handle for interacting with the current file being used.
+	fstream ioFile;
 
+private:
+
+	// The path to the file being used.
 	string filePath;
-	
+
 };

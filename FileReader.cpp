@@ -16,10 +16,9 @@
 #include <string>
 #include <unordered_map>
 
-FileReader::FileReader(string filePath)
-	: FileManipulator(filePath)
+FileReader::FileReader(string filePath) : FileManipulator(filePath)
 {
-	
+	cout << "FileReader created with file: " << filePath << endl;
 }
 //--
 void FileReader::count_string()
@@ -46,21 +45,13 @@ void FileReader::count_string()
 		freq_vec.push_back(0);
 	}
 
-	ifstream inFile(this->filePath);
-
-	if (this->open_file(inFile) == false)
-	{
-		Exception_FileManipulator ex;
-		throw ex;
-	}
-
 	string phr;
 
 	cout << "Searching for occurences ..." << endl;
 
-	while (inFile.good())
+	while (this->ioFile.good())
 	{
-		inFile >> phr;
+		this->ioFile >> phr;
 
 		// TODO:
 		// There is likely a better way than to perform a linear search.
@@ -83,7 +74,7 @@ void FileReader::count_string()
 	// TODO
 	// Create a way to automatically close files at the end of each function.
 	// Throw exceptions.
-	if (close_file(inFile) == true)
+	if (this->close_file() == true)
 	{
 		cout << "File closed successfully" << endl;
 	}
@@ -96,9 +87,7 @@ void FileReader::count_string()
 //--
 void FileReader::hydrogen_bond_intra_average(double threshold_persistence)
 {
-	ifstream inFile(this->filePath);
-
-	if (this->open_file(inFile) == false)
+	if (this->open_file() == false)
 	{
 		Exception_FileManipulator ex;
 		throw ex;
@@ -111,19 +100,19 @@ void FileReader::hydrogen_bond_intra_average(double threshold_persistence)
 	double in_frac;
 
 	cout << "*-*-*-*-*-*-*-*-*-*-* HBOND-INTRA-AVG.DAT *-*-*-*-*-*-*-*-*-*-*" << endl;
-	cout << "INPUT = " << this->filePath << endl;
+	cout << "INPUT = " << this->getFilePath() << endl;
 	//cout << "OUTPUT .dat = " << output_file << endl;
 	cout << "HYDROGEN BONDS ACCEPTED AT THRESHOLD MINIMUM = " << threshold_persistence << endl;
 
 	// first 6 words aren't needed
 	for (int i = 0; i < 7; i++)
 	{
-		inFile >> in_string;
+		this->ioFile >> in_string;
 	}
 
-	while (inFile.good())
+	while (this->ioFile.good())
 	{
-		inFile >> in_string;
+		this->ioFile >> in_string;
 		string atom_copy = in_string;
 		string chain_copy = in_string;
 		
@@ -137,8 +126,8 @@ void FileReader::hydrogen_bond_intra_average(double threshold_persistence)
 		//cout << "Acceptor chain is " << acceptorChain << endl;
 		// --
 
-		inFile >> in_string;
-		inFile >> in_string;
+		this->ioFile >> in_string;
+		this->ioFile >> in_string;
 
 		// -- #Donor Work -- //
 		string donorAtom;
@@ -155,8 +144,8 @@ void FileReader::hydrogen_bond_intra_average(double threshold_persistence)
 		//cout << "Donor chain is " << donorChain << endl;
 		// --
 
-		inFile >> in_string;
-		inFile >> in_frac;
+		this->ioFile >> in_string;
+		this->ioFile >> in_frac;
 
 		// -- #Frac Work -- //
 		//cout << "Persistence: " << in_frac << endl;
@@ -184,7 +173,6 @@ void FileReader::hydrogen_bond_intra_average(double threshold_persistence)
 			DONOR.push_back(sct);
 
 			DONORS.insert({ acceptorAtom + "_" + donorAtom, DONOR });
-
 
 			//cout << "New acceptor atom: " << acceptorAtom << endl;
 		}
@@ -223,7 +211,7 @@ void FileReader::hydrogen_bond_intra_average(double threshold_persistence)
 		// could cause issues later if it reaches the end of the file...
 		for (int i = 0; i < 2; i++)
 		{
-			inFile >> in_string;
+			this->ioFile >> in_string;
 		}
 	}
 
@@ -232,6 +220,7 @@ void FileReader::hydrogen_bond_intra_average(double threshold_persistence)
 	// had to hard code in the second for loop and onwards
 	// not sure how to account for an N, then an N1, and so on
 	// or if a certain acceptor has already encountered a certain donor
+
 	for (size_t i = 0; i < ACCEPTORS.size(); i++)
 	{
 		cout << "BONDS AT ACCEPTOR: " << ACCEPTORS[i] << endl;
@@ -289,18 +278,22 @@ void FileReader::hydrogen_bond_intra_average(double threshold_persistence)
 			cout << endl;
 		}
 	}
+
+	if (this->close_file() == false)
+	{
+		Exception_FileManipulator ex;
+		throw ex;
+	}
 }
 //--
 void FileReader::distance_atoms(double threshold_distance)
 {
 	cout << "*-*-*-*-*-*-*-*-*-*-* DISTANCE.IN *-*-*-*-*-*-*-*-*-*-*" << endl;
-	cout << "INPUT = " << this->filePath << endl;
+	cout << "INPUT = " << this->getFilePath() << endl;
 	//cout << "OUTPUT .dat = " << output_file << endl;
 	cout << "MAXIMUM ANGSTROM DISTANCE = " << threshold_distance << endl;
 
-	ifstream inFile(this->filePath);
-
-	if (this->open_file(inFile) == false)
+	if (this->open_file() == false)
 	{
 		Exception_FileManipulator ex;
 		throw ex;
@@ -315,7 +308,7 @@ void FileReader::distance_atoms(double threshold_distance)
 		int end_frame;
 	};
 
-	inFile >> garbage >> garbage;
+	this->ioFile >> garbage >> garbage;
 
 	vector < frame_pair > DISTANCES;
 
@@ -328,12 +321,12 @@ void FileReader::distance_atoms(double threshold_distance)
 
 	int iterator;
 
-	while (inFile.good())
+	while (this->ioFile.good())
 	{
 		double angstroms;
 		
-		inFile >> iterator;
-		inFile >> angstroms;
+		this->ioFile >> iterator;
+		this->ioFile >> angstroms;
 
 		if (angstroms < best_distance)
 		{
@@ -368,11 +361,71 @@ void FileReader::distance_atoms(double threshold_distance)
 	}
 	*/
 
-	if (this->close_file(inFile))
+	if (this->close_file() == false)
 	{
-		cout << "Done" << endl;
+		Exception_FileManipulator ex;
+		throw ex;
 	}
-	else
+}
+//--
+void FileReader::surface_average()
+{
+	cout << "*-*-*-*-*-*-*-*-*-*-* SURFACE.DAT ANALYSIS *-*-*-*-*-*-*-*-*-*-*" << endl;
+	cout << "INPUT = " << this->getFilePath() << endl;
+
+	if (this->open_file() == false)
+	{
+		Exception_FileManipulator ex;
+		throw ex;
+	}
+
+	double average = 0.0;
+
+	double lowestSurface = DBL_MAX;
+	double highestSurface = DBL_MIN;
+
+	int lowestFrame = INT_MAX;
+	int highestFrame = INT_MIN;
+
+	int currentFrame;
+	double currentSurface;
+
+	// seekg - seek "get" pointer, move it past the initial strings
+	this->ioFile.seekg(sizeof("#Frame") + sizeof("SA_00000"));
+
+	if (this->ioFile.good())
+	{
+		this->ioFile >> currentFrame;
+		this->ioFile >> currentSurface;
+
+		while (this->ioFile.good())
+		{
+			if (currentSurface < lowestSurface)
+			{
+				lowestSurface = currentSurface;
+				lowestFrame = currentFrame;
+			}
+			else if (currentSurface > highestSurface)
+			{
+				highestSurface = currentSurface;
+				highestFrame = currentFrame;
+			}
+
+			average += currentSurface;
+
+			ioFile >> currentFrame >> currentSurface;
+		}
+	}
+
+	average /= currentFrame;
+
+	cout << "The highest frame was " << highestFrame << " with a surface area of " << highestSurface
+		<< " squared angstroms" << endl;
+	cout << "The lowest frame was " << lowestFrame << " with a surface area of " << lowestSurface
+		<< " squared angstroms" << endl;
+	cout << "The average exposed surface area was " << average << " angstroms" << endl;
+
+	if (this->close_file() == false)
 	{
 		Exception_FileManipulator ex;
 		throw ex;

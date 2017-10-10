@@ -14,5 +14,12 @@
 
 Exception_FileManipulator::Exception_FileManipulator()
 {
-	
+	exceptionFile = "";
+	exceptionFileLine = "";
+}
+
+Exception_FileManipulator::Exception_FileManipulator(string file, string line)
+{
+	exceptionFile = file;
+	exceptionFileLine = line;
 }
