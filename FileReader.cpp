@@ -7,6 +7,7 @@
 		-Reduce opening of files to a function.
 		-Automatically close files at the end of file reading, writing, etc.
 			functions. Destructor?
+		-Add safety checks to read, write, open, close, etc.
 
 	Author(s): Kevin B. Krause
 	Version:   unreleased
@@ -15,6 +16,7 @@
 #include "FileReader.h"
 #include <string>
 #include <unordered_map>
+#include <iostream>
 
 FileReader::FileReader(string filePath) : FileManipulator(filePath)
 {
@@ -74,24 +76,14 @@ void FileReader::count_string()
 	// TODO
 	// Create a way to automatically close files at the end of each function.
 	// Throw exceptions.
-	if (this->close_file() == true)
-	{
-		cout << "File closed successfully" << endl;
-	}
-	else
-	{
-		Exception_FileManipulator ex;
-		throw ex;
-	}
+	this->ioFile.close();
 }
 //--
-void FileReader::hydrogen_bond_intra_average(double threshold_persistence)
+string FileReader::hydrogen_bond_intra_average(double threshold_persistence)
 {
-	if (this->open_file() == false)
-	{
-		Exception_FileManipulator ex;
-		throw ex;
-	}
+	string output = "";
+
+	this->ioFile.open(this->filePath);
 
 	vector <string> ACCEPTORS;
 	unordered_map < string, vector < hbond_child > > DONORS;
@@ -99,10 +91,10 @@ void FileReader::hydrogen_bond_intra_average(double threshold_persistence)
 	string in_string = "";
 	double in_frac;
 
-	cout << "*-*-*-*-*-*-*-*-*-*-* HBOND-INTRA-AVG.DAT *-*-*-*-*-*-*-*-*-*-*" << endl;
-	cout << "INPUT = " << this->getFilePath() << endl;
-	//cout << "OUTPUT .dat = " << output_file << endl;
-	cout << "HYDROGEN BONDS ACCEPTED AT THRESHOLD MINIMUM = " << threshold_persistence << endl;
+	output += "*-*-*-*-*-*-*-*-*-*-* HBOND-INTRA-AVG.DAT *-*-*-*-*-*-*-*-*-*-* \n";
+	output += "INPUT = " + this->getFilePath() + "\n";
+	//output += "OUTPUT .dat = " << output_file << endl;
+	output += "HYDROGEN BONDS ACCEPTED AT THRESHOLD MINIMUM = " + to_string(threshold_persistence) + "\n";
 
 	// first 6 words aren't needed
 	for (int i = 0; i < 7; i++)
@@ -215,45 +207,43 @@ void FileReader::hydrogen_bond_intra_average(double threshold_persistence)
 		}
 	}
 
-	cout << endl << "Done" << endl << endl;
-
 	// had to hard code in the second for loop and onwards
 	// not sure how to account for an N, then an N1, and so on
 	// or if a certain acceptor has already encountered a certain donor
 
 	for (size_t i = 0; i < ACCEPTORS.size(); i++)
 	{
-		cout << "BONDS AT ACCEPTOR: " << ACCEPTORS[i] << endl;
-		cout << "ACCEPTOR CHAIN";
-		cout << "		";
-		cout << "DONOR CHAIN";
-		cout << "		";
-		cout << "PERSISTENCE" << endl;
+		output += "BONDS AT ACCEPTOR: " + ACCEPTORS[i] + "\n";
+		output += "ACCEPTOR CHAIN";
+		output += "		";
+		output += "DONOR CHAIN";
+		output += "		";
+		output += "PERSISTENCE \n";
 
-		cout << endl;
+		output += "\n";
 		
-		cout << "DONOR: N" << endl;
+		output += "DONOR: N \n";
 		for (size_t j = 0; j < DONORS[ACCEPTORS[i] + "_" + "N"].size(); j++)
 		{
-			cout << DONORS[ACCEPTORS[i] + "_" + "N"][j].acceptor_chain;
-			cout << "			";
-			cout << DONORS[ACCEPTORS[i] + "_" + "N"][j].donor_chain;
-			cout << "			";
-			cout << DONORS[ACCEPTORS[i] + "_" + "N"][j].persistence;
+			output += DONORS[ACCEPTORS[i] + "_" + "N"][j].acceptor_chain;
+			output += "			";
+			output += DONORS[ACCEPTORS[i] + "_" + "N"][j].donor_chain;
+			output += "			";
+			output += to_string(DONORS[ACCEPTORS[i] + "_" + "N"][j].persistence);
 
-			cout << endl;
+			output += "\n";
 		}
 
-		cout << "DONOR: N1" << endl;
+		output += "DONOR: N1 \n";
 		for (size_t j = 0; j < DONORS[ACCEPTORS[i] + "_" + "N1"].size(); j++)
 		{
-			cout << DONORS[ACCEPTORS[i] + "_" + "N1"][j].acceptor_chain;
-			cout << "			";
-			cout << DONORS[ACCEPTORS[i] + "_" + "N1"][j].donor_chain;
-			cout << "			";
-			cout << DONORS[ACCEPTORS[i] + "_" + "N1"][j].persistence;
+			output += DONORS[ACCEPTORS[i] + "_" + "N1"][j].acceptor_chain;
+			output += "			";
+			output += DONORS[ACCEPTORS[i] + "_" + "N1"][j].donor_chain;
+			output += "			";
+			output += to_string(DONORS[ACCEPTORS[i] + "_" + "N1"][j].persistence);
 
-			cout << endl;
+			output += "\n";
 		}
 	}
 
@@ -279,11 +269,9 @@ void FileReader::hydrogen_bond_intra_average(double threshold_persistence)
 		}
 	}
 
-	if (this->close_file() == false)
-	{
-		Exception_FileManipulator ex;
-		throw ex;
-	}
+	this->ioFile.close();
+
+	return output;
 }
 //--
 void FileReader::distance_atoms(double threshold_distance)
@@ -293,11 +281,7 @@ void FileReader::distance_atoms(double threshold_distance)
 	//cout << "OUTPUT .dat = " << output_file << endl;
 	cout << "MAXIMUM ANGSTROM DISTANCE = " << threshold_distance << endl;
 
-	if (this->open_file() == false)
-	{
-		Exception_FileManipulator ex;
-		throw ex;
-	}
+	this->ioFile.open(this->filePath);
 
 	// Is this string really necessary?
 	string garbage;
@@ -361,23 +345,17 @@ void FileReader::distance_atoms(double threshold_distance)
 	}
 	*/
 
-	if (this->close_file() == false)
-	{
-		Exception_FileManipulator ex;
-		throw ex;
-	}
+	this->ioFile.close();
 }
 //--
-void FileReader::surface_average()
+string FileReader::surface_average()
 {
-	cout << "*-*-*-*-*-*-*-*-*-*-* SURFACE.DAT ANALYSIS *-*-*-*-*-*-*-*-*-*-*" << endl;
-	cout << "INPUT = " << this->getFilePath() << endl;
+	string retVal = "";
 
-	if (this->open_file() == false)
-	{
-		Exception_FileManipulator ex;
-		throw ex;
-	}
+	retVal += "*-*-*-*-*-*-*-*-*-*-* SURFACE.DAT ANALYSIS *-*-*-*-*-*-*-*-*-*-*\n";
+	retVal += "INPUT = " + this->getFilePath() + "\n";
+
+	this->ioFile.open(this->filePath);
 
 	double average = 0.0;
 
@@ -419,17 +397,15 @@ void FileReader::surface_average()
 
 	average /= currentFrame;
 
-	cout << "The highest frame was " << highestFrame << " with a surface area of " << highestSurface
-		<< " squared angstroms" << endl;
-	cout << "The lowest frame was " << lowestFrame << " with a surface area of " << lowestSurface
-		<< " squared angstroms" << endl;
-	cout << "The average exposed surface area was " << average << " angstroms" << endl;
+	retVal += "The highest frame was " + to_string(highestFrame) + " with a surface area of " + to_string(highestSurface)
+		+ " squared angstroms" + "\n";
+	retVal += "The lowest frame was " + to_string(lowestFrame) + " with a surface area of " + to_string(lowestSurface)
+		+ " squared angstroms" + "\n";
+	retVal += "The average exposed surface area was " + to_string(average) + " angstroms" + "\n";
 
-	if (this->close_file() == false)
-	{
-		Exception_FileManipulator ex;
-		throw ex;
-	}
+	this->ioFile.close();
+
+	return retVal;
 }
 //--
 bool FileReader::found_acceptor(vector < string > in_ACCEPTORS, string search_atom)
@@ -456,4 +432,33 @@ bool FileReader::found_donor(unordered_map<string, vector<hbond_child>>& in_DONO
 		return true;
 	}
 }
+void FileReader::open_file()
+{
+	this->ioFile.open(this->filePath);
+}
+void FileReader::close_file()
+{
+	this->ioFile.close();
+}
 //--
+bool FileReader::set_file_path(string newPath)
+{
+	ifstream exists(newPath);
+
+	if (!exists)
+	{
+		return false;
+	}
+	else
+	{
+		if (this->ioFile.is_open() == false)
+		{
+			this->filePath = newPath;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+}

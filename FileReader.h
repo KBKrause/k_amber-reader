@@ -49,13 +49,13 @@ public:
       		double threshold_persistence - the percent at which to stop reading the configured file
 				A 5% threshold should be passed as 0.05.
    		Returns:
-			  none
+			  A string aggregate of all output ... [ELABORATE]
 		Bugs:
 			TBD
 		Other:
 			Alias: hbond_intra_avg.
 	*/
-	void hydrogen_bond_intra_average(double threshold_persistence);
+	string hydrogen_bond_intra_average(double threshold_persistence);
 	/**
 		Determines the distances between two atoms. It is used in conjunction with
 			hbond_intra_avg to determine which frames from the simulation can best represent a
@@ -76,7 +76,7 @@ public:
 		Parameters:
 			none
 		Returns:
-			none
+			String aggregate of all output ... [ELABORATE]
 		Bugs:
 			Skips the first frame and first surface reading.
 			Shows that average is "inf" angstroms.
@@ -84,7 +84,21 @@ public:
 		Other:
 			I'd like this function to also calculate 68% and 95% confidence values.
 	*/
-	void surface_average();
+	string surface_average();
+	/**
+		Configure this object to use a new file for reading. The old one (associated file)
+			will be discarded.
+		Parameters:
+			string newPath - Path to the new file being read
+		Returns:
+			true - Old file closed and newPath set
+			false - Either: newPath does not exist, OR old file is still open/cannot be closed
+		Bugs:
+			Does not check validity of new path.
+		Other:
+			Can we report how it failed (stderr) and why it returns false?
+	*/
+	bool set_file_path(string newPath) override;
 
 private:
 
@@ -110,4 +124,8 @@ private:
 	bool found_acceptor(vector < string > in_ACCEPTORS, string search_atom);
 	bool found_donor(unordered_map < string, vector < hbond_child > >& in_DONORS, string acceptor_search_atom, string donor_search_atom);
 
+	// override for FileManipulator::open_file
+	void open_file() override;
+	// override for FileManipulator::close_file
+	void close_file() override;
 };

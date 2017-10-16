@@ -14,12 +14,10 @@
 
 Exception_FileManipulator::Exception_FileManipulator()
 {
-	exceptionFile = "";
-	exceptionFileLine = "";
-}
 
-Exception_FileManipulator::Exception_FileManipulator(string file, string line)
+}
+//--
+const char* Exception_FileManipulator::what() const noexcept
 {
-	exceptionFile = file;
-	exceptionFileLine = line;
+	return "FileManipulator exception thrown\n";
 }
