@@ -3,7 +3,15 @@
     FileReader.h
 	FileReader (freader) inherits from FileManipulator. Its main use
 		is to read output from AMBER and print results to the screen.
-		freader will not generate any files.
+		freader will not generate any files. In the case that FileReader's
+		work should be saved, the FileWriter class can be used.
+
+	Notable Bugs:
+		10/18/2017: Maybe remove a lot of miscellaneous work from reader into writer, or
+		provide better names. As it is now, the only difference between the reader and writer
+		is that the reader creates a string and the writer puts it into a file. It adds a lot
+		of extra work that is not necessary. This isn't so bad because all the code necessary
+		to read and write exists; the problem lies in deciding where that code should go.
 
     Author(s): Kevin B. Krause
     Version:   unreleased
@@ -93,12 +101,25 @@ public:
 		Returns:
 			true - Old file closed and newPath set
 			false - Either: newPath does not exist, OR old file is still open/cannot be closed
-		Bugs:
-			Does not check validity of new path.
 		Other:
 			Can we report how it failed (stderr) and why it returns false?
 	*/
 	bool set_file_path(string newPath) override;
+	/**
+		"Fix" a PDB file by changing the following:
+			-change all instances of "INT" to the monomer's 3 letter acronym
+			-remove all lines starting with "CONECT"
+			-remove all lines starting with "LINK"
+			-add a "TER" and "END" to the end of the file
+		Parameters:
+			string monomer - the 3 letter acronyom of the monomer on the micelle, such as
+				poly(SULL) being ULL, poly(SULV) being ULV, and so on
+		Returns:
+			none
+		Bugs:
+			Commented out a file handle, needs to return a string.
+	*/
+	void autofix_pdb(string monomer);
 
 private:
 

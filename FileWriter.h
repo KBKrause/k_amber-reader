@@ -2,9 +2,13 @@
 	k_amber-reader
 	FileWriter.h
 	FileWriter (fwriter) inherits from FileManipulator. It can work with
-		FileReader.h to create readable output for the user. The associated 
-		FileReader generates the data, while the FileWriter "decrypts" the 
-		data and makes it user friendly.
+		FileReader.h to create readable output for the user.
+		This is a very light class that is, essentially, a "wrapper"
+		for std::ofstream.
+
+	Notable Bugs:
+		-Use mem_fn or std::bind to simplify write_any and other write functions.
+			**Lambda functions
 
 	Author(s): Kevin B. Krause
 	Version:   unreleased
@@ -63,18 +67,18 @@ public:
 	*/
 	void write_hydrogen_bond_intra_avg(FileReader& input, double threshold);
 	/**
-		Configure this object to use a new file for writing. The old one (associated file)
-			will be discarded.
+		Writes the resulting output of FileReader::autofix_pdb() to the file being
+			used by this object.
 		Parameters:
-			string newPath - Path to the new file being read
+			FileReader& input - reference to a specific file being used by FileReader
+			string monomer - the 3 letter acronyom of the monomer on the micelle, such as
+				poly(SULL) being ULL, poly(SULV) being ULV, and so on
 		Returns:
-			true - Old file closed and newPath set
-			false - Either: newPath does not exist, OR old file is still open/cannot be closed
+			none
 		Bugs:
-			Does not check validity of new path.
-		Other:
-			Can we report how it failed (stderr) and why it returns false?
+			Will just write without any conditions.
 	*/
+	void write_autofix_pdb(FileReader& input, string monomer);
 	bool set_file_path(string newPath) override;
 
 	//void write_any(FileReader& input, void(*write_func)(FileReader&));

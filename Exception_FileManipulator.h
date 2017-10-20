@@ -43,6 +43,7 @@ public:
 		This is the overrideable what() method provided by std::exception,
 		which is inherited by all of the sub-exceptions.
 		For now, it only returns a newline terminated char[].
+		It cannot throw exceptions, as it is called when an exception is thrown.
 		Parameters:
 			none
 		Returns:

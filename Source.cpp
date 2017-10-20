@@ -18,13 +18,18 @@
 using namespace std;
 
 void test_constructors();
+void test_reader_methods();
 
 int main(int argc, char* argv[])
 {
 	try
 	{	
-		FileReader f("C:/Users/Kevin/Documents/Github/k_amber-reader/data/SULL_ALP-R4_surface.dat");
-		FileWriter f2("C:/Users/Kevin/Documents/Github/k_amber-reader/data/some_output.dat");
+		FileReader f("C:/Users/Kevin/Documents/Github/k_amber-reader/data/sull_oxp-r-1.pdb");
+		//FileWriter f_pdbFix("C:/Users/Kevin/Documents/Github/k_amber-reader/data/sull_oxp-r-1.pdb");
+
+		f.autofix_pdb("ULV");
+
+		//f_pdbFix.autofix_pdb();
 
 		//test_constructors();
 	}
@@ -38,23 +43,23 @@ int main(int argc, char* argv[])
 
 void test_constructors()
 {
+	// Add good constructor cases
 	try
 	{
-		FileWriter test_defaultCtor;
+		FileReader r_badString("a/bad/string");
+		FileWriter w_noString;
+		FileWriter w_badString("a/bad/string");
 	}
-	catch (Exception_FileManipulator ex)
+	catch (Exception_FileManipulator& e)
 	{
-
+		e.what();
 	}
 }
 
-/*
-separate printing to a public method
-calculation to a private method
+void test_reader_methods()
+{
 
-printFoo couts foo() foo() returns a string
-writeFooToFile ... etc
-*/
+}
 
 // Key Tags:
 // [ELABORATE]

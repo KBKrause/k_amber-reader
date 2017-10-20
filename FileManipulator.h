@@ -44,6 +44,28 @@ public:
 			Can we report how it failed (stderr) and why it returns false?
 	*/
 	virtual bool set_file_path(string newPath) = 0;
+	/**
+		Static function that determines if a path exists and can be opened for reading.
+		Parameters:
+			string newPath - Path to the file being read
+		Returns:
+			true - if the file can be opened and read
+			false - if the file does not exist, or it cannot be opened
+		Bugs:
+			none
+		Other:
+			Can we report how it failed (stderr) and why it returns false?
+	*/
+	static bool isValidFile(string newPath);
+
+	// Proposed Functions
+	/*
+	static bool make_directory();
+	static bool remove_directory();
+	static bool make_file();
+	static bool del_file();
+	static bool change_perms(); // file or "directory"
+	*/
 
 protected:
 

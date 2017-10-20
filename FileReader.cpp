@@ -14,9 +14,12 @@
 */
 
 #include "FileReader.h"
-#include <string>
+#include "Compute.h"
+#include <string.h>
 #include <unordered_map>
 #include <iostream>
+#include <sstream>
+#include <iterator>
 
 FileReader::FileReader(string filePath) : FileManipulator(filePath)
 {
@@ -294,7 +297,7 @@ void FileReader::distance_atoms(double threshold_distance)
 
 	this->ioFile >> garbage >> garbage;
 
-	vector < frame_pair > DISTANCES;
+	vector < frame_pair > distances;
 
 	frame_pair val;
 	val.start_frame = -1;
@@ -328,13 +331,13 @@ void FileReader::distance_atoms(double threshold_distance)
 		else if ((angstroms > threshold_distance) && (val.start_frame != -1))
 		{
 			val.end_frame = iterator;
-			DISTANCES.push_back(val);
+			distances.push_back(val);
 			val.start_frame = -1;
 			val.end_frame = -1;
 		}
 	}
 
-	cout << endl << "RANGES WITH MAXIMUM DISTANCE THRESHOLD = " << threshold_distance << ", FOUND: " << DISTANCES.size() << endl;
+	cout << endl << "RANGES WITH MAXIMUM DISTANCE THRESHOLD = " << threshold_distance << ", FOUND: " << distances.size() << endl;
 	cout << "Lowest distance located at frame: " << best_frame << ", with distance: " << best_distance << " angstroms." << endl;
 	cout << "FRAME START	FRAME END" << endl;
 
@@ -357,8 +360,6 @@ string FileReader::surface_average()
 
 	this->ioFile.open(this->filePath);
 
-	double average = 0.0;
-
 	double lowestSurface = DBL_MAX;
 	double highestSurface = DBL_MIN;
 
@@ -367,6 +368,8 @@ string FileReader::surface_average()
 
 	int currentFrame;
 	double currentSurface;
+
+	vector <double> surfaces;
 
 	// seekg - seek "get" pointer, move it past the initial strings
 	this->ioFile.seekg(sizeof("#Frame") + sizeof("SA_00000"));
@@ -378,6 +381,8 @@ string FileReader::surface_average()
 
 		while (this->ioFile.good())
 		{
+			surfaces.push_back(currentSurface);
+
 			if (currentSurface < lowestSurface)
 			{
 				lowestSurface = currentSurface;
@@ -389,19 +394,16 @@ string FileReader::surface_average()
 				highestFrame = currentFrame;
 			}
 
-			average += currentSurface;
-
 			ioFile >> currentFrame >> currentSurface;
 		}
 	}
-
-	average /= currentFrame;
 
 	retVal += "The highest frame was " + to_string(highestFrame) + " with a surface area of " + to_string(highestSurface)
 		+ " squared angstroms" + "\n";
 	retVal += "The lowest frame was " + to_string(lowestFrame) + " with a surface area of " + to_string(lowestSurface)
 		+ " squared angstroms" + "\n";
-	retVal += "The average exposed surface area was " + to_string(average) + " angstroms" + "\n";
+	retVal += "The average exposed surface area was " + to_string(Compute::average(surfaces)) + " angstroms" + "\n";
+	retVal += "The standard deviation is +/- " + to_string(Compute::standard_deviation(surfaces)) + " angstroms\n";
 
 	this->ioFile.close();
 
@@ -432,10 +434,12 @@ bool FileReader::found_donor(unordered_map<string, vector<hbond_child>>& in_DONO
 		return true;
 	}
 }
+//--
 void FileReader::open_file()
 {
 	this->ioFile.open(this->filePath);
 }
+//--
 void FileReader::close_file()
 {
 	this->ioFile.close();
@@ -443,22 +447,72 @@ void FileReader::close_file()
 //--
 bool FileReader::set_file_path(string newPath)
 {
-	ifstream exists(newPath);
-
-	if (!exists)
+	if (FileManipulator::isValidFile(newPath))
 	{
-		return false;
+		this->filePath = newPath;
+		return true;
 	}
 	else
 	{
-		if (this->ioFile.is_open() == false)
+		return false;
+	}
+}
+//--
+void FileReader::autofix_pdb(string monomer)
+{
+	if (monomer.length() != 3)
+	{
+		return;
+	}
+
+	cout << "Fixing pdb ..." << endl;
+
+	//ofstream fixedPDB;
+	//fixedPDB.open("C:/Users/Kevin/Documents/Github/k_amber-reader/data/fixedPDB.dat");
+
+	open_file();
+
+	char thisChar;
+
+	string thisString;
+	vector < string > thisLine;
+
+	while (this->ioFile.good())
+	{
+		ioFile.get(thisChar);
+
+		if ((thisChar == ' ') || (thisChar == '\n'))
 		{
-			this->filePath = newPath;
-			return true;
+			if (thisString == "INT")
+			{
+				thisString = monomer;
+			}
+
+			thisString.push_back(thisChar);
+			thisLine.push_back(thisString);
+			thisString.clear();
+
+			if (thisChar == '\n')
+			{
+				if ((thisLine[0] != "LINK ") && (thisLine[0] != "CONECT "))
+				{
+					for (size_t i = 0; i < thisLine.size(); i++)
+					{
+						//fixedPDB << thisLine[i];
+					}
+				}
+
+				thisLine.clear();
+			}
 		}
 		else
 		{
-			return false;
+			thisString.push_back(thisChar);
 		}
 	}
+
+	//fixedPDB.close();
+
+	close_file();
 }
+//--

@@ -25,3 +25,17 @@ string FileManipulator::getFilePath()
 {
 	return filePath;
 }
+//--
+bool FileManipulator::isValidFile(string newPath)
+{
+	ifstream exists(newPath);
+
+	if (!exists)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
