@@ -21,7 +21,7 @@
 using namespace std;
 
 /*
-inline double kcal_to_kj() {};
+inline double kcal_to_j(double kcal) {return kcal / 0.000239};
 */
 
 class Compute

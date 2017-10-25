@@ -16,6 +16,9 @@ FileWriter::FileWriter(string path) : FileManipulator(path)
 
 FileWriter::FileWriter() : FileManipulator()
 {
+	// This FileWriter has no string associated with it. This is bad.
+	// Without a path to write to, it will not produce any output.
+	// It will need to be initialized before any methods are called.
 	PRN_WARNING(AT);
 }
 
@@ -37,35 +40,41 @@ void FileWriter::write_hydrogen_bond_intra_avg(FileReader& input, double thresho
 	close_file();
 }
 
-void FileWriter::write_autofix_pdb(FileReader & input, string monomer)
+void FileWriter::write_autofix_pdb(FileReader& input, string monomer)
 {
 	open_file();
 
-	// this->ioFile << input.autofix_pdb(monomer);
+	this->ioFile << input.autofix_pdb(monomer);
 
 	close_file();
 }
 
 bool FileWriter::set_file_path(string newPath)
 {
-	PRN_WARNING(AT);
-	this->filePath = newPath;
-	return true;
+	if (FileManipulator::isValidFile(newPath))
+	{
+		this->filePath = newPath;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 void FileWriter::open_file()
 {
 	PRN_WARNING(AT);
 
-	if (this->filePath != "")
+	// If the file being written to is one that already exists, overwriting is not allowed.
+	if (FileManipulator::isValidFile(this->filePath))
 	{
-		this->ioFile.open(this->filePath, fstream::out);
+		Exception_FileManipulator ex;
+		throw ex;
 	}
 	else
 	{
-		// This string is full of shit
-		string newPath = __DATE__;
-		this->ioFile.open(newPath, fstream::out);
+		this->ioFile.open(this->filePath, fstream::out);
 	}
 }
 

@@ -56,7 +56,7 @@ public:
 		Other:
 			Can we report how it failed (stderr) and why it returns false?
 	*/
-	static bool isValidFile(string newPath);
+	static inline bool isValidFile(string newPath);
 
 	// Proposed Functions
 	/*

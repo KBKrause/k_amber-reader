@@ -18,7 +18,7 @@
 #include "FileManipulator.h"
 #include "FileReader.h"
 
-class FileWriter : FileManipulator
+class FileWriter : public FileManipulator
 {
 public:
 

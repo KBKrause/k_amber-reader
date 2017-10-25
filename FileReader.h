@@ -22,7 +22,7 @@
 #include <vector>
 #include <unordered_map>
 
-class FileReader : FileManipulator
+class FileReader : public FileManipulator
 {
 public:
 
@@ -74,7 +74,7 @@ public:
 		Returns:
 			none
 		Bugs:
-			none
+			10/23/2017: Returns an empty string with threshold 0 and 100. Fix.
 	*/
 	void distance_atoms(double threshold_distance);
 	/**
@@ -119,9 +119,11 @@ public:
 		Bugs:
 			Commented out a file handle, needs to return a string.
 	*/
-	void autofix_pdb(string monomer);
+	string autofix_pdb(string monomer);
 
 private:
+
+	inline void pre_read_greeting(string title, string msg);
 
 	/* 
 		This is the helper struct used to create hydrogen bonds in hydrogen_bond_intra_average. Each "child"

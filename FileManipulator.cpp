@@ -17,6 +17,7 @@ FileManipulator::FileManipulator(string f)
 }
 FileManipulator::FileManipulator()
 {
+	// This constructor exists for the FileWriter's empty constructor.
 	PRN_WARNING(AT);
 	filePath = "";
 }

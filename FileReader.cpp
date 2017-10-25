@@ -8,6 +8,7 @@
 		-Automatically close files at the end of file reading, writing, etc.
 			functions. Destructor?
 		-Add safety checks to read, write, open, close, etc.
+		-Add function for screen printouts.
 
 	Author(s): Kevin B. Krause
 	Version:   unreleased
@@ -28,6 +29,8 @@ FileReader::FileReader(string filePath) : FileManipulator(filePath)
 //--
 void FileReader::count_string()
 {
+	pre_read_greeting(__FUNCTION__, "Count the instances of strings in a file");
+
 	string in_string = " ";
 	vector <string> searchWords;
 	// The freq_vec is a "mirrored" vector that matches the string at index n of searchWords
@@ -84,9 +87,18 @@ void FileReader::count_string()
 //--
 string FileReader::hydrogen_bond_intra_average(double threshold_persistence)
 {
+	// The threshold cannot be below or at 0.
+	if (threshold_persistence <= 0)
+	{
+		PRN_WARNING(AT);
+		return "";
+	}
+
+	pre_read_greeting(__FUNCTION__, "Calculating intramolec. hbonds with persistence = " + to_string(threshold_persistence));
+
 	string output = "";
 
-	this->ioFile.open(this->filePath);
+	open_file();
 
 	vector <string> ACCEPTORS;
 	unordered_map < string, vector < hbond_child > > DONORS;
@@ -94,10 +106,12 @@ string FileReader::hydrogen_bond_intra_average(double threshold_persistence)
 	string in_string = "";
 	double in_frac;
 
+	/*
 	output += "*-*-*-*-*-*-*-*-*-*-* HBOND-INTRA-AVG.DAT *-*-*-*-*-*-*-*-*-*-* \n";
 	output += "INPUT = " + this->getFilePath() + "\n";
 	//output += "OUTPUT .dat = " << output_file << endl;
 	output += "HYDROGEN BONDS ACCEPTED AT THRESHOLD MINIMUM = " + to_string(threshold_persistence) + "\n";
+	*/
 
 	// first 6 words aren't needed
 	for (int i = 0; i < 7; i++)
@@ -272,17 +286,19 @@ string FileReader::hydrogen_bond_intra_average(double threshold_persistence)
 		}
 	}
 
-	this->ioFile.close();
+	close_file();
 
 	return output;
 }
 //--
 void FileReader::distance_atoms(double threshold_distance)
 {
+	/*
 	cout << "*-*-*-*-*-*-*-*-*-*-* DISTANCE.IN *-*-*-*-*-*-*-*-*-*-*" << endl;
 	cout << "INPUT = " << this->getFilePath() << endl;
 	//cout << "OUTPUT .dat = " << output_file << endl;
 	cout << "MAXIMUM ANGSTROM DISTANCE = " << threshold_distance << endl;
+	*/
 
 	this->ioFile.open(this->filePath);
 
@@ -353,10 +369,14 @@ void FileReader::distance_atoms(double threshold_distance)
 //--
 string FileReader::surface_average()
 {
+	pre_read_greeting(__FUNCTION__, "Finds the average SASA of the molecule and its highest/lowest points");
+
 	string retVal = "";
 
+	/*
 	retVal += "*-*-*-*-*-*-*-*-*-*-* SURFACE.DAT ANALYSIS *-*-*-*-*-*-*-*-*-*-*\n";
 	retVal += "INPUT = " + this->getFilePath() + "\n";
+	*/
 
 	this->ioFile.open(this->filePath);
 
@@ -437,6 +457,7 @@ bool FileReader::found_donor(unordered_map<string, vector<hbond_child>>& in_DONO
 //--
 void FileReader::open_file()
 {
+	// What is this even good for?
 	this->ioFile.open(this->filePath);
 }
 //--
@@ -458,17 +479,18 @@ bool FileReader::set_file_path(string newPath)
 	}
 }
 //--
-void FileReader::autofix_pdb(string monomer)
+string FileReader::autofix_pdb(string monomer)
 {
+	pre_read_greeting(__FUNCTION__, "Fixes the PDB and replaces INT with " + monomer);
+	string returnString = "";
+
 	if (monomer.length() != 3)
 	{
-		return;
+		cout << "ERROR: Input monomer = " << monomer << " must have exactly 3 letters" << endl;
+		return returnString;
 	}
 
 	cout << "Fixing pdb ..." << endl;
-
-	//ofstream fixedPDB;
-	//fixedPDB.open("C:/Users/Kevin/Documents/Github/k_amber-reader/data/fixedPDB.dat");
 
 	open_file();
 
@@ -498,7 +520,7 @@ void FileReader::autofix_pdb(string monomer)
 				{
 					for (size_t i = 0; i < thisLine.size(); i++)
 					{
-						//fixedPDB << thisLine[i];
+						returnString += thisLine[i];
 					}
 				}
 
@@ -511,8 +533,17 @@ void FileReader::autofix_pdb(string monomer)
 		}
 	}
 
-	//fixedPDB.close();
+	thisString += "TER\nEND\n";
 
 	close_file();
+
+	return returnString;
+}
+//--
+void FileReader::pre_read_greeting(string title, string msg)
+{
+	cout << "*-*-*-*-*-*-*-*-*-*-* " << title << " *-*-*-*-*-*-*-*-*-*-* \n";
+	cout << "INPUT = " + this->getFilePath() + "\n";
+	cout << msg << endl;
 }
 //--
