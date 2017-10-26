@@ -1,0 +1,36 @@
+-Batch commands
+-Polymorphic stuff with filereader and filewriter
+-csv generator
+-dihedral angles
+FIXES:
+
+SUGGESTIONS:
+FileManipulator
+	-MAke FileManipulator an abstract class. Fmanip is useless on its own. it DOES need to be instantiated
+	for each file path.
+	-Give it static methods.
+	-Check where file paths are given. Do not allow empty strings unless in default ctor.
+	-Check what is and is not inherited by derived classes.
+	Some functionality is not necessary.
+
+
+OTHER USEFUL THINGS:
+-generate xcel files
+-generate diagrams/pictures/graphs/etc.
+-generate shell files for input, cpptraj, etc
+
+THINGS TO BOIL DOWN:
+-filereading open/close specific functions
+-filewriting open/close specific functions
+
+README:
+-add prerequisities
+-tests
+-installation
+-versioning
+-contribution
+
+QUESTIONS:
+	-M or P: Multiple return statements in a file. good or bad?
+	-M: Function pointers with class
+	-P: best way to process command line options
