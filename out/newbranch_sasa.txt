@@ -1,0 +1,6 @@
+*-*-*-*-*-*-*-*-*-*-* SURFACE.DAT ANALYSIS *-*-*-*-*-*-*-*-*-*-*
+INPUT = C:/Users/Kevin/Documents/Github/k_amber-reader/data/SULL_surface_ALP-R4_ligand.dat
+The highest frame was 209518 with a surface area of 445.331700 squared angstroms
+The lowest frame was 185 with a surface area of 0.179300 squared angstroms
+The average exposed surface area was 268.738882 angstroms
+The standard deviation is +/- 50.297698 angstroms

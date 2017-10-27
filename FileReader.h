@@ -63,7 +63,7 @@ public:
 		Other:
 			Alias: hbond_intra_avg.
 	*/
-	string hydrogen_bond_intra_average(double threshold_persistence);
+	//string hydrogen_bond_intra_average(double threshold_persistence);
 	/**
 		Determines the distances between two atoms. It is used in conjunction with
 			hbond_intra_avg to determine which frames from the simulation can best represent a
@@ -121,34 +121,21 @@ public:
 	*/
 	string autofix_pdb(string monomer);
 
-private:
+	virtual string analyze(double threshold);
+	virtual string analyze(string s);
+	virtual string analyze();
+
+protected:
 
 	inline void pre_read_greeting(string title, string msg);
-
-	/* 
-		This is the helper struct used to create hydrogen bonds in hydrogen_bond_intra_average. Each "child"
-		consists of two interacting monomers of the micelle and how long they were interacting.
-		Bugs:
-			See comments above.
-	*/
-	struct hbond_child
-	{
-		string acceptor_chain;
-		string donor_chain;
-		double persistence;
-	};
-
-	/*	
-		These are the helper functions to find if hydrogen bonds were already located between a donor and acceptor
-			pair.
-		Bugs:
-			Mixture of case and underscores in parameter names.
-	*/
-	bool found_acceptor(vector < string > in_ACCEPTORS, string search_atom);
-	bool found_donor(unordered_map < string, vector < hbond_child > >& in_DONORS, string acceptor_search_atom, string donor_search_atom);
 
 	// override for FileManipulator::open_file
 	void open_file() override;
 	// override for FileManipulator::close_file
 	void close_file() override;
+
+private:
+
+	inline void invalid_analysis();
+
 };

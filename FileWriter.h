@@ -52,7 +52,7 @@ public:
 		Returns:
 			none
 	*/
-	void write_surface_average(FileReader& input);
+	//void write_surface_average(FileReader& input);
 	/**
 		Writes the resulting output of FileReader::hydrogen_bond_intra_avg() to the file being
 			used by this object.
@@ -65,7 +65,7 @@ public:
 		Bugs:
 			Will just write without any conditions.
 	*/
-	void write_hydrogen_bond_intra_avg(FileReader& input, double threshold);
+	//void write_hydrogen_bond_intra_avg(FileReader& input, double threshold);
 	/**
 		Writes the resulting output of FileReader::autofix_pdb() to the file being
 			used by this object.
@@ -78,8 +78,13 @@ public:
 		Bugs:
 			Will just write without any conditions.
 	*/
-	void write_autofix_pdb(FileReader& input, string monomer);
+	//void write_autofix_pdb(FileReader& input, string monomer);
 	bool set_file_path(string newPath) override;
+
+	//void write_analysis(FileReader& input, double threshold);
+	void write_analysis(FileReader& input, double threshold);
+	void write_analysis(FileReader& input, string s);
+	void write_analysis(FileReader& input);
 
 	//void write_any(FileReader& input, void(*write_func)(FileReader&));
 
