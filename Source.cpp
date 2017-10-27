@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
 		PDBReader pdbr("C:/Users/Kevin/Documents/Github/k_amber-reader/data/sull_oxp-r-1.pdb");
 
 		FileWriter fw("C:/Users/Kevin/Documents/Github/k_amber-reader/out/newbranch_sasa.txt");
-		//fw.write_analysis(sasar);
+		fw.write_analysis(sasar);
 		fw.set_file_path("C:/Users/Kevin/Documents/Github/k_amber-reader/out/newbranch_hbond.txt");
 		fw.write_analysis(hbr, 0.05);
 		fw.set_file_path("C:/Users/Kevin/Documents/Github/k_amber-reader/out/newbranch_pdb.txt");

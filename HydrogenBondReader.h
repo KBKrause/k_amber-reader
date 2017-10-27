@@ -6,6 +6,22 @@ class HydrogenBondReader : public FileReader
 public:
 
 	HydrogenBondReader(string filePath);
+	/**
+	Hydrogen bond calculation to aggregate average amount of bonds and percentages
+	per acceptor/donor pair. The list output by AMBER is not easy to read and must be
+	tabulated by hand. Ideally, this function will reduce AMBER's output and provide
+	something that can be piped into another program as a substitute for calculating
+	everything by hand.
+	Parameters:
+	double threshold_persistence - the percent at which to stop reading the configured file
+	A 5% threshold should be passed as 0.05.
+	Returns:
+	A string aggregate of all output ... [ELABORATE]
+	Bugs:
+	TBD
+	Other:
+	Alias: hbond_intra_avg.
+	*/
 	string analyze(double threshold) override;
 
 private:

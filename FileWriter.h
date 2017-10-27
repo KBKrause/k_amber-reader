@@ -45,48 +45,22 @@ public:
 	*/
 	FileWriter();
 	/**
-		Writes the resulting output of FileReader::surface_average() to the file being used
-			by this object.
-		Parameters:
-			FileReader& input - Reference to a specific file being used by FileReader
-		Returns:
-			none
+		TODO
 	*/
-	//void write_surface_average(FileReader& input);
-	/**
-		Writes the resulting output of FileReader::hydrogen_bond_intra_avg() to the file being
-			used by this object.
-		Parameters:
-			FileReader& input - reference to a specific file being used by FileReader
-			double threshold - The percent at which to stop reading the configured file.
-				A 5% threshold should be passed as 0.05.
-		Returns:
-			none
-		Bugs:
-			Will just write without any conditions.
-	*/
-	//void write_hydrogen_bond_intra_avg(FileReader& input, double threshold);
-	/**
-		Writes the resulting output of FileReader::autofix_pdb() to the file being
-			used by this object.
-		Parameters:
-			FileReader& input - reference to a specific file being used by FileReader
-			string monomer - the 3 letter acronyom of the monomer on the micelle, such as
-				poly(SULL) being ULL, poly(SULV) being ULV, and so on
-		Returns:
-			none
-		Bugs:
-			Will just write without any conditions.
-	*/
-	//void write_autofix_pdb(FileReader& input, string monomer);
 	bool set_file_path(string newPath) override;
 
-	//void write_analysis(FileReader& input, double threshold);
+	/**
+	10/27/2017
+		These are the methods that actually create and write to files the output of FileReader's
+			derived classes.
+		They all require a FileReader object as its input and possible additional parameters
+			depending on the specific analysis.
+		Each method reads as 1) open, 2) ofstream << input.analyze(), 3) close
+	*/
 	void write_analysis(FileReader& input, double threshold);
 	void write_analysis(FileReader& input, string s);
 	void write_analysis(FileReader& input);
 
-	//void write_any(FileReader& input, void(*write_func)(FileReader&));
 
 private:
 
