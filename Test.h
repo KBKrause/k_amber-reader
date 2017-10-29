@@ -2,17 +2,19 @@
 #include "FileManipulator.h"
 #include "Exception_FileManipulator.h"
 #include "FileReader.h"
-#include "FileWriter.h"
+#include "HydrogenBondReader.h"
+#include "Molecule.h"
 #include <assert.h>
+
+// "String Table"
+const string FILE_HBOND = "C:/Users/Kevin/Documents/Github/k_amber-reader/data/SULL_ALP-R4_Hbond.dat";
+const string FILE_SASA = "C:/Users/Kevin/Documents/Github/k_amber-reader/data/SULL_surface_ALP-R4_ligand.dat";
+const string FILE_PDB = "C:/Users/Kevin/Documents/Github/k_amber-reader/data/sull_oxp-r-1.pdb";
+const string DIR_OUT = "C:/Users/Kevin/Documents/Github/k_amber-reader/out/";
 
 class Test
 {
 public:
-
-	static void test_reader_methods();
-	static void test_writer_methods();
-	static void test_manipulator_methods();
-	static void test_constructors();
 
 	static void test_Compute_conversions();
 
@@ -20,8 +22,9 @@ public:
 	static void test_Compute();
 	static void test_ExceptionFileManipulator();
 	static void test_FileManipulator();
+
+	static void test_Molecule();
 	static void test_FileReader();
-	static void test_FileWriter();
 	static void test_HydrogenBondReader();
 	static void test_PDBReader();
 	static void test_SASAReader();

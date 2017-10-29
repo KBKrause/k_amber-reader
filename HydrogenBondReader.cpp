@@ -7,14 +7,14 @@ HydrogenBondReader::HydrogenBondReader(string filePath) : FileReader(filePath)
 //--
 string HydrogenBondReader::analyze(double threshold)
 {
-	// The threshold cannot be below or at 0.
-	if (threshold <= 0)
+	pre_read_greeting(__FUNCTION__, "Calculating intramolec. hbonds with persistence = " + to_string(threshold));
+
+	// Invalid threshold values.
+	if ((threshold <= 0) || (threshold >= 100))
 	{
-		PRN_WARNING(AT);
+		PRN_ERROR(AT);
 		return "";
 	}
-
-	pre_read_greeting(__FUNCTION__, "Calculating intramolec. hbonds with persistence = " + to_string(threshold));
 
 	string output = "";
 

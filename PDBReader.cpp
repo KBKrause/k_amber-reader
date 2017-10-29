@@ -2,8 +2,8 @@
 
 PDBReader::PDBReader(string filePath) : FileReader(filePath)
 {
-}
 
+}
 //--
 string PDBReader::analyze(string s)
 {
@@ -12,7 +12,7 @@ string PDBReader::analyze(string s)
 
 	if (s.length() != 3)
 	{
-		cout << "ERROR: Input monomer = " << s << " must have exactly 3 letters" << endl;
+		PRN_ERROR(AT);
 		return returnString;
 	}
 

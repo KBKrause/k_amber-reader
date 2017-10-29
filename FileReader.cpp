@@ -171,11 +171,6 @@ void FileReader::close_file()
 {
 	this->ioFile.close();
 }
-inline void FileReader::invalid_analysis()
-{
-	Exception_FileManipulator e;
-	throw e;
-}
 //--
 bool FileReader::set_file_path(string newPath)
 {
@@ -192,17 +187,17 @@ bool FileReader::set_file_path(string newPath)
 //--
 string FileReader::analyze(double threshold)
 {
-	invalid_analysis();
+	PRN_WARNING(AT);
 	return "";
 }
 string FileReader::analyze(string s)
 {
-	invalid_analysis();
+	PRN_WARNING(AT);
 	return "";
 }
 string FileReader::analyze()
 {
-	invalid_analysis();
+	PRN_WARNING(AT);
 	return "";
 }
 //--

@@ -22,28 +22,29 @@
 
 using namespace std;
 
+void testAll();
+
 int main(int argc, char* argv[])
 {
 	try
 	{	
-		HydrogenBondReader hbr("C:/Users/Kevin/Documents/Github/k_amber-reader/data/SULL_ALP-R4_Hbond.dat");
-		SASAReader sasar("C:/Users/Kevin/Documents/Github/k_amber-reader/data/SULL_surface_ALP-R4_ligand.dat");
-		PDBReader pdbr("C:/Users/Kevin/Documents/Github/k_amber-reader/data/sull_oxp-r-1.pdb");
-
-		FileWriter fw("C:/Users/Kevin/Documents/Github/k_amber-reader/out/newbranch_sasa.txt");
-		fw.write_analysis(sasar);
-		fw.set_file_path("C:/Users/Kevin/Documents/Github/k_amber-reader/out/newbranch_hbond.txt");
-		fw.write_analysis(hbr, 0.05);
-		fw.set_file_path("C:/Users/Kevin/Documents/Github/k_amber-reader/out/newbranch_pdb.txt");
-		fw.write_analysis(pdbr, "ULL");
-		
+		testAll();
 	}
-	catch (Exception_FileManipulator& e)
+	catch (exception& e)
 	{
 		cout << e.what();
 	}
 
 	return 0;
+}
+
+void testAll()
+{
+	Test::test_HydrogenBondReader();
+	Test::test_SASAReader();
+	Test::test_FileReader();
+	Test::test_PDBReader();
+	Test::test_Molecule();
 }
 
 // Key Tags:

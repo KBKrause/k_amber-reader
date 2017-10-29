@@ -25,6 +25,7 @@
 
 using namespace std;
 
+inline void PRN_ERROR(const char* location) { cout << "ERROR: Invalidity at " << location << endl; };
 inline void PRN_WARNING(const char* location) { cout << "WARNING: Unsafe behavior at " << location << endl; };
 
 class Exception_FileManipulator : exception

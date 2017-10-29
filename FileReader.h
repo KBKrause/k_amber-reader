@@ -94,9 +94,4 @@ protected:
 	void open_file() override;
 	// override for FileManipulator::close_file
 	void close_file() override;
-
-private:
-
-	inline void invalid_analysis();
-
 };

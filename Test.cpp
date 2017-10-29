@@ -1,51 +1,65 @@
 #include "Test.h"
+#include "SASAReader.h"
+#include "PDBReader.h"
 
-void Test::test_reader_methods()
+void Test::test_FileManipulator()
 {
-	try
-	{
-		// Test hydrogen bond method.
-		// Can break on: improper file (attempt to detect this), poor threshold values.
-		//FileReader fr("C:/Users/Kevin/Documents/Github/k_amber-reader/data/SULL_ALP-R4_Hbond.dat");
-		//assert(fr.hydrogen_bond_intra_average(0.0000001) != "");
-		//assert(fr.hydrogen_bond_intra_average(100) != "");
-		// add assertion for wrong file
-		//assert(!(fr.set_file_path("a/bad/string")));
-		//assert(fr.getFilePath() == "C:/Users/Kevin/Documents/Github/k_amber-reader/data/SULL_ALP-R4_Hbond.dat");
-		// add assertion for wrong file
-		//assert(fr.set_file_path("C:/Users/Kevin/Documents/Github/k_amber-reader/data/sull_oxp-r-1.pdb"));
-	}
-	catch (Exception_FileManipulator& e)
-	{
-		e.what();
-	}
+	assert(FileManipulator::isValidFile(FILE_HBOND));
+	assert(FileManipulator::isValidFile(FILE_PDB));
+	assert(FileManipulator::isValidFile(FILE_SASA));
 }
-void Test::test_writer_methods()
+void Test::test_Molecule()
 {
+	Molecule m1("s");
+	Molecule m2("s");
 
-}
-void Test::test_manipulator_methods()
-{
-
+	assert(m1.getMoleculeName() == m2.getMoleculeName());
 }
 //--
-void Test::test_constructors()
+void Test::test_FileReader()
 {
-	// Add good constructor cases
-	try
-	{
-		//FileReader r_badstring("a/bad/string");
-		//FileReader r_nostring("");
-		//FileWriter w_noString;
-		//FileWriter w_badString("a/bad/string");
-	}
-	catch (Exception_FileManipulator& e)
-	{
-		e.what();
-	}
+	FileReader fr("garbage");
+	assert(!(fr.isValidFile(fr.getFilePath())));
+
+	assert(fr.analyze() == "");
+
+	assert(!(fr.set_file_path("a/bad/string")));
+	assert(fr.set_file_path(FILE_HBOND));
+	assert(fr.getFilePath() == FILE_HBOND);
+	assert(fr.set_file_path("C:/Users/Kevin/Documents/Github/k_amber-reader/data/sull_oxp-r-1.pdb"));
+	assert(fr.getFilePath() == FILE_PDB);
+}
+//--
+void Test::test_PDBReader()
+{
+	PDBReader pdbr(FILE_PDB.c_str());
+	assert(pdbr.getFilePath() == FILE_PDB);
+
+	assert(pdbr.isValidFile(pdbr.getFilePath()));
+
+	assert(pdbr.analyze("ULL") != "");
+	assert(pdbr.analyze("longstr") == "");
+	assert(pdbr.analyze(to_string(3)) == "");
 }
 
-void Test::test_Compute_conversions()
+void Test::test_SASAReader()
 {
+	SASAReader sasar(FILE_SASA.c_str());
+	assert(sasar.getFilePath() == FILE_SASA);
 
+	assert(sasar.isValidFile(sasar.getFilePath()));
+	assert(sasar.analyze() != "");
+}
+
+void Test::test_HydrogenBondReader()
+{
+	HydrogenBondReader hbr(FILE_HBOND.c_str());
+	assert(hbr.getFilePath() == FILE_HBOND);
+
+	assert(hbr.isValidFile(hbr.getFilePath()));
+
+	assert(hbr.analyze(100.0) == "");
+	assert(hbr.analyze(0.0) == "");
+	assert(hbr.analyze(-4832.0) == "");
+	assert(hbr.analyze(104.0) == "");
 }
