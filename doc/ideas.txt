@@ -34,7 +34,8 @@ QUESTIONS:
 	-M or P: Multiple return statements in a file. good or bad?
 	-M: Function pointers with class
 	-P: best way to process command line options
+	-M or P: how to decide to throw exceptions or have a "bad return code"?
 
 FileReader derived classes
-	RoGReader
+	RoGReader (radius of gyration)
 	DihedralReader

@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <string>
+#include <unordered_map>
 
 #include "FileManipulator.h"
 #include "FileReader.h"
@@ -20,6 +21,8 @@
 #include "SASAReader.h"
 #include "PDBReader.h"
 
+#include "Molecule.h"
+
 using namespace std;
 
 void testAll();
@@ -28,7 +31,19 @@ int main(int argc, char* argv[])
 {
 	try
 	{	
-		testAll();
+		unordered_map <string, Molecule> allMolecules = Molecule::loadMolecules();
+
+		cout << "Number of molecules loaded: " << allMolecules.size() << endl;
+
+		/*
+		HydrogenBondReader hbr(FILE_HBOND);
+		PDBReader pdbr(FILE_PDB);
+
+		Molecule realmolecule("SULL-ALP-R4");
+		realmolecule.add_analysis(hbr, "HBOND");
+		realmolecule.add_analysis(pdbr, "PDB_ORIG");
+		realmolecule.print_all_analysis_paths();
+		*/
 	}
 	catch (exception& e)
 	{

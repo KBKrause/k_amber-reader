@@ -14,6 +14,13 @@ void Test::test_Molecule()
 	Molecule m2("s");
 
 	assert(m1.getMoleculeName() == m2.getMoleculeName());
+
+	HydrogenBondReader hbr(FILE_HBOND);
+	PDBReader pdbr(FILE_PDB);
+
+	assert(m1.add_analysis(hbr, "HBOND"));
+	assert(!(m1.add_analysis(hbr, "HBOND")));
+	assert(!(m1.add_analysis(hbr, "gargbage")));
 }
 //--
 void Test::test_FileReader()
