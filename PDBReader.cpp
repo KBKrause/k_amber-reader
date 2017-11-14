@@ -1,3 +1,12 @@
+/**
+	k_amber-reader
+	PDBReader.cpp
+	Implementation of PDBReader.h
+
+	Author(s): Kevin B. Krause
+	Version:   unreleased
+*/
+
 #include "PDBReader.h"
 
 PDBReader::PDBReader(string filePath) : FileReader(filePath)

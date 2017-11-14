@@ -1,3 +1,14 @@
+/**
+	k_amber-reader
+	PDBReader.h
+	This class "fixes" protein data bank (.pdb) files to be compatible with AMBER.
+		Historically, .pdb files created by Molecular Operating Environment (MOE) have
+		some additional comments and MOE-only content that are unnecessary for our purposes.
+
+	Author(s): Kevin B. Krause
+	Version:   unreleased
+*/
+
 #pragma once
 #include "FileReader.h"
 
@@ -5,10 +16,14 @@ class PDBReader : public FileReader
 {
 public:
 
+	/**
+		Constructor for PDBReader objects.
+		Parameters:
+			string filePath - Path to the file being used
+	*/
 	PDBReader(string filePath);
 
 	/**
-	10/27/2017
 		"Fix" a PDB file by changing the following:
 			-change all instances of "INT" to the monomer's 3 letter acronym
 			-remove all lines starting with "CONECT"

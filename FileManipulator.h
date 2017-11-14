@@ -1,9 +1,9 @@
 /**
 	k_amber-reader
     FileManipulator.h
-	FileManipulator (fmanip) is an easy way for non-programmers
-		to navigate and use the unix or windows file system. It also takes
-		care of reading, writing, etc.
+	FileManipulator encapsulates the responsibilities of file reading
+		and file writing. It is the base class for FileReader and FileWriter.
+		As a base class, it cannot be instantiated.
 
 	Notable Bugs:
 		-Change the stream handle to private data member in inherited objects.
@@ -45,8 +45,12 @@ public:
 	*/
 	virtual bool set_file_path(string newPath) = 0;
 
-	// Proposed Functions
-	/*
+	/**
+	 Proposed functions as static methods.
+	 If not here, then in another class. This class can be used in input files/instructions
+		like the ones given to cpptraj. The program can direct output from each "run" to a new
+		directory.
+
 	static bool make_directory();
 	static bool remove_directory();
 	static bool make_file();
@@ -55,16 +59,16 @@ public:
 	*/
 
 	/**
-	Static function that determines if a path exists and can be opened for reading.
-	Parameters:
-	string newPath - Path to the file being read
-	Returns:
-	true - if the file can be opened and read
-	false - if the file does not exist, or it cannot be opened
-	Bugs:
-	none
-	Other:
-	Can we report how it failed (stderr) and why it returns false?
+		Static function that determines if a path exists and can be opened for reading.
+		Parameters:
+			string newPath - Path to the file being read
+		Returns:
+			true - if the file can be opened and read
+			false - if the file does not exist, or it cannot be opened
+		Bugs:
+			none
+		Other:
+			Can we report how it failed (stderr) and why it returns false?
 	*/
 	static bool isValidFile(string newPath);
 
@@ -93,7 +97,7 @@ protected:
 	*/
 	FileManipulator();
 	/**
-   		Pure virtual function for file opening
+   		Pure virtual function for file opening. Its behavior is dependent on the inheriting class.
    		Parameters:
 			none
    		Returns:
@@ -105,7 +109,7 @@ protected:
 	*/
 	virtual void open_file() = 0;
 	/**
-   		Pure virtual function for file closing
+   		Pure virtual function for file closing. Its behavior is dependent on the inheriting class.
    		Parameters:
 			none
    		Returns:
@@ -117,6 +121,7 @@ protected:
 	*/
 	virtual void close_file() = 0;
 
+	// Stream handle.
 	fstream ioFile;
 
 	// The path to the file being used.

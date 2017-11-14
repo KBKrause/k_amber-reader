@@ -1,3 +1,13 @@
+/**
+	k_amber-reader
+	Test.h
+	This is a testing class that makes extensive use of assert() to verify
+		that the functions work as intended.
+
+	Author(s): Kevin B. Krause
+	Version:   unreleased
+*/
+
 #pragma once
 #include "FileManipulator.h"
 #include "Exception_FileManipulator.h"

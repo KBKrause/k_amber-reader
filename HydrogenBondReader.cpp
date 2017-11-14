@@ -1,3 +1,12 @@
+/**
+	k_amber-reader
+	HydrogenBondReader.cpp
+	Implementation of HydrogenBondReader.h
+
+	Author(s): Kevin B. Krause
+	Version:   unreleased
+*/
+
 #include "HydrogenBondReader.h"
 
 HydrogenBondReader::HydrogenBondReader(string filePath) : FileReader(filePath)

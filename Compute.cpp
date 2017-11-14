@@ -1,3 +1,12 @@
+/**
+	k_amber-reader
+	Compute.cpp
+	Implementation of Compute.h
+
+	Author(s): Kevin B. Krause
+	Version:   unreleased
+*/
+
 #include "Compute.h"
 
 double Compute::standard_deviation(vector<double>& values)
@@ -5,7 +14,7 @@ double Compute::standard_deviation(vector<double>& values)
 	double retVal = 0;
 
 	// No vectors of size 0
-	if (values.size() == 0)
+	if (values.size() != 0)
 	{
 		return 0;
 	}

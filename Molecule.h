@@ -1,3 +1,18 @@
+/**
+	k_amber-reader
+	Molecule.h
+	A molecule can represent a single molecule in space or water, or a molecular micelle (MM).
+		Each molecule has a name, such as poly(SULL). It can also have files associated with it,
+		such as a .pdb. These possible file associations are contained in a static set called
+		validAnalysisNames.
+	One problem we encountered over the summer was keeping everything atomic and consistent. To remedy this,
+		a single Molecule object can be created per molecule being studied. This will organize all of the
+		molecule's files under a single directory.
+
+	Author(s): Kevin B. Krause
+	Version:   unreleased
+*/
+
 /*
 	No 2 molecules can have the same name (no copies).
 	If a molecule needs to be saved - figure it out.
@@ -27,6 +42,12 @@ public:
 	static unordered_map <string, Molecule> loadMolecules();
 
 	bool add_analysis(FileReader& input, string analy);
+	
+	// This method does not require a FileReader object's getFilePath() method to return the path of the file.
+	// Instead, filePath is the string itself. However, this method needs to verify that:
+	// -it's a valid file
+	// -it belongs to this micelle
+	// -the analysis type analy, specified by the second string parameter, matches the file
 	bool add_analysis(string filePath, string analy);
 	void print_all_analysis_paths();
 

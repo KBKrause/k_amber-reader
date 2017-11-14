@@ -35,6 +35,8 @@ int main(int argc, char* argv[])
 
 		cout << "Number of molecules loaded: " << allMolecules.size() << endl;
 
+		testAll();
+
 		/*
 		HydrogenBondReader hbr(FILE_HBOND);
 		PDBReader pdbr(FILE_PDB);
@@ -60,6 +62,7 @@ void testAll()
 	Test::test_FileReader();
 	Test::test_PDBReader();
 	Test::test_Molecule();
+	Test::test_FileManipulator();
 }
 
 // Key Tags:

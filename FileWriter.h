@@ -3,8 +3,7 @@
 	FileWriter.h
 	FileWriter (fwriter) inherits from FileManipulator. It can work with
 		FileReader.h to create readable output for the user.
-		This is a very light class that is, essentially, a "wrapper"
-		for std::ofstream.
+		This class is, essentially, a "wrapper" for std::ofstream.
 
 	Notable Bugs:
 		-Use mem_fn or std::bind to simplify write_any and other write functions.
@@ -42,6 +41,8 @@ public:
 			none
 		Returns:
 			An fwriter object
+		Bugs:
+			11/13/2017: Does it actually automatically generate names, as it indicates?
 	*/
 	FileWriter();
 	/**
@@ -56,11 +57,12 @@ public:
 		They all require a FileReader object as its input and possible additional parameters
 			depending on the specific analysis.
 		Each method reads as 1) open, 2) ofstream << input.analyze(), 3) close
+	11/13/2017: This doesn't really fix the problem of the FileReader and parameters being independent of each other.
+				Can function pointers be used to help tie together the parameters of analyze() with the type of FileReader?
 	*/
 	void write_analysis(FileReader& input, double threshold);
 	void write_analysis(FileReader& input, string s);
 	void write_analysis(FileReader& input);
-
 
 private:
 

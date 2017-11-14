@@ -13,11 +13,17 @@ using namespace std;
 
 FileManipulator::FileManipulator(string f)
 {
-	filePath = f;
+	if (isValidFile(f))
+	{
+		filePath = f;
+	}
+	else
+	{
+		PRN_ERROR(AT);
+	}
 }
 FileManipulator::FileManipulator()
 {
-	// This constructor exists for the FileWriter's empty constructor.
 	PRN_WARNING(AT);
 	filePath = "";
 }

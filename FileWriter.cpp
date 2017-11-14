@@ -23,43 +23,55 @@ FileWriter::FileWriter() : FileManipulator()
 }
 bool FileWriter::set_file_path(string newPath)
 {
-	PRN_WARNING(AT);
+	bool fileWasSet = false;
 
-	this->filePath = newPath;
-	return true;
+	if (isValidFile(newPath))
+	{
+		this->filePath = newPath;
+		fileWasSet = true;
+	}
+	
+	return fileWasSet;
 }
 //--
 void FileWriter::write_analysis(FileReader& input, double threshold)
 {
-	open_file();
+	if (this->filePath != "")
+	{
+		open_file();
 
-	this->ioFile << input.analyze(threshold);
+		this->ioFile << input.analyze(threshold);
 
-	close_file();
+		close_file();
+	}
 }
 //--
 void FileWriter::write_analysis(FileReader& input, string s)
 {
-	open_file();
+	if (this->filePath != "")
+	{
+		open_file();
 
-	this->ioFile << input.analyze(s);
+		this->ioFile << input.analyze(s);
 
-	close_file();
+		close_file();
+	}
 }
 //
 void FileWriter::write_analysis(FileReader& input)
 {
-	open_file();
+	if (this->filePath != "")
+	{
+		open_file();
 
-	this->ioFile << input.analyze();
+		this->ioFile << input.analyze();
 
-	close_file();
+		close_file();
+	}
 }
 //--
 void FileWriter::open_file()
 {
-	PRN_WARNING(AT);
-
 	this->ioFile.open(this->filePath, fstream::out);
 }
 

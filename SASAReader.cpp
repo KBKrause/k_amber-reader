@@ -1,3 +1,12 @@
+/**
+	k_amber-reader
+	SASAReader.cpp
+	Implementation of SASAReader.h
+
+	Author(s): Kevin B. Krause
+	Version:   unreleased
+*/
+
 #include "SASAReader.h"
 #include "Compute.h"
 

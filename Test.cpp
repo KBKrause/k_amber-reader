@@ -8,6 +8,7 @@ void Test::test_FileManipulator()
 	assert(FileManipulator::isValidFile(FILE_PDB));
 	assert(FileManipulator::isValidFile(FILE_SASA));
 }
+//--
 void Test::test_Molecule()
 {
 	Molecule m1("s");
@@ -48,7 +49,7 @@ void Test::test_PDBReader()
 	assert(pdbr.analyze("longstr") == "");
 	assert(pdbr.analyze(to_string(3)) == "");
 }
-
+//--
 void Test::test_SASAReader()
 {
 	SASAReader sasar(FILE_SASA.c_str());
@@ -57,7 +58,7 @@ void Test::test_SASAReader()
 	assert(sasar.isValidFile(sasar.getFilePath()));
 	assert(sasar.analyze() != "");
 }
-
+//--
 void Test::test_HydrogenBondReader()
 {
 	HydrogenBondReader hbr(FILE_HBOND.c_str());

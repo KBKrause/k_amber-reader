@@ -2,9 +2,9 @@
 	k_amber-reader
     FileReader.h
 	FileReader (freader) inherits from FileManipulator. Its main use
-		is to read output from AMBER and print results to the screen.
-		freader will not generate any files. In the case that FileReader's
-		work should be saved, the FileWriter class can be used.
+		is to read output from AMBER.
+		FileReader will not generate any files. 
+		In the case that FileReader's work should be saved, the FileWriter class can be used.
 
 	Notable Bugs:
 		10/18/2017: Maybe remove a lot of miscellaneous work from reader into writer, or
@@ -27,7 +27,7 @@ class FileReader : public FileManipulator
 public:
 
 	/**
-		Constructor for freader objects. Because freader does not
+		Constructor for FileReader objects. Because freader does not
 		   have any private data members, it is an empty constructor
 		   that also calls the constructor for FileManipulator.
    		Parameters:
@@ -45,12 +45,13 @@ public:
 		Bugs:
 			This function matches punctuation and case when searching. It should not.
 		It should remove all puncutation and change all case to lower case.
+			11/13/2017: Static method? Only 1 implementation of count_string() ever needed at once.
 	*/
 	void count_string();
 	/**
-		Determines the distances between two atoms. It is used in conjunction with
-			hbond_intra_avg to determine which frames from the simulation can best represent a
-			hydrogen bond. The input file is a distance.dat between two atoms.
+		Determines the distances between two atoms. 
+		Typically, it used in conjunction with hbond_intra_avg to determine which frames from the simulation can best represent a
+			hydrogen bond. The corresponding AMBER input file is a distance.dat between two atoms.
 		Parameters:
 			double threshold_persistence - the percent at which to stop reading the configured file
 				A 5% threshold should be passed as 0.05.
@@ -58,6 +59,7 @@ public:
 			none
 		Bugs:
 			10/23/2017: Returns an empty string with threshold 0 and 100. Fix.
+			11/13/2017: Does this count as its own "simulation," or should it remain in FileReader?
 	*/
 	void distance_atoms(double threshold_distance);
 	/**

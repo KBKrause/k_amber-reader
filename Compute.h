@@ -1,11 +1,9 @@
 /**
 	k_amber-reader
 	Compute.h
-	This object contains mathematical functions and other
+	This class contains mathematical functions and other
 		tools used to calculate probability, statistics, etc.,
-		useful in some of the simulations analyses.
-		For clarity and ease of use, the only outside resources used
-		are provided by STL.
+		useful in some of the simulation analyses.
 	This class is not related to the similarly named package
 		provided by Boost.
 
@@ -56,7 +54,7 @@ private:
 	/*
 		The constructor of this class is private because it has no associated data members
 		or mutability.
-		For use, any static function above can be called with
+		For use, any static function of the class can be called with
 		Compute::function_name(args);
 	*/
 	Compute();
