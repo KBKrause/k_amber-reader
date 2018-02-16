@@ -37,7 +37,6 @@ int main(int argc, char* argv[])
 
 		testAll();
 
-		/*
 		HydrogenBondReader hbr(FILE_HBOND);
 		PDBReader pdbr(FILE_PDB);
 
@@ -45,7 +44,7 @@ int main(int argc, char* argv[])
 		realmolecule.add_analysis(hbr, "HBOND");
 		realmolecule.add_analysis(pdbr, "PDB_ORIG");
 		realmolecule.print_all_analysis_paths();
-		*/
+		
 	}
 	catch (exception& e)
 	{

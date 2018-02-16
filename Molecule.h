@@ -27,6 +27,11 @@
 #include "PDBReader.h"
 #include "SASAReader.h"
 
+enum AnalysisTitle
+{
+	HBOND, SASA, PDB_ORIG, PDB_FIXED
+};
+
 // https://stackoverflow.com/questions/7531981/how-to-instantiate-a-static-vector-of-object
 static unordered_set <string> validAnalysisNames;
 
